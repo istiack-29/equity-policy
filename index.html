@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equity Policies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @font-face {
+            font-family: 'BanglaCustom';
+            src: url('B2.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'EnglishCustom';
+            src: url('E1.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            background-color: #0b0f19;
+            color: #f1f5f9;
+            margin: 0;
+            padding: 0;
+        }
+        .font-bangla {
+            font-family: 'BanglaCustom', sans-serif, 'SolaimanLipi';
+        }
+
+        .font-english {
+            font-family: 'EnglishCustom', sans-serif, 'Arial';
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between font-bangla">
+
+    <!-- Header -->
+    <header class="w-full bg-slate-900/80 border-b border-slate-800 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="h-3 w-3 rounded-full bg-amber-500 animate-pulse"></span>
+                <span class="text-slate-200 font-semibold tracking-wide text-sm md:text-base">Home Page</span>
+            </div>
+            <button onclick="copyCurrentLink()" class="bg-indigo-600/20 hover:bg-indigo-600 border border-indigo-500/30 text-indigo-300 hover:text-white font-medium px-4 py-1.5 rounded-lg text-xs md:text-sm transition-all flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                কপি লিংক
+            </button>
+        </div>
+    </header>
+
+    <!-- Success Toast Message -->
+    <div id="toast" class="fixed top-6 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white px-5 py-2.5 rounded-full shadow-2xl opacity-0 transition-all duration-300 pointer-events-none z-50 flex items-center gap-2 border border-emerald-500 text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>লিংক সফলভাবে কপি হয়েছে!</span>
+    </div>
+
+    <!-- Main Section -->
+    <main class="w-full max-w-4xl mx-auto px-6 py-12 flex-grow flex flex-col justify-center">
+        
+        <!-- Notice Box -->
+        <div class="text-center space-y-4 mb-12">
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">ইকুইটি পলিসি গুলো দেখতে নিচের যেকোনোটিতে ক্লিক করুন</h2>
+        </div>
+
+        <hr class="border-slate-800/80 mb-10" />
+
+        <!-- Dynamic Links Grid Container -->
+        <div id="links-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- JavaScript dynamically injects elements here -->
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-6 text-center text-xs text-slate-600 border-t border-slate-900/60 bg-slate-950/20 mt-12">
+        এই ওয়েবপেইজটি শুধুমাত্র কিছু ইকুইটি
+    </footer>
+
+    <!-- Load external links source data -->
+    <script src="t.js"></script>
+
+    <!-- Core App Engine JavaScript -->
+    <script>
+        // Language Auto-Detection Function
+        // Returns true if text contains Bangla characters
+        function isBanglaText(text) {
+            const banglaRange = /[\u0980-\u09FF]/;
+            return banglaRange.test(text);
+        }
+
+        // Render links dynamically on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('links-container');
+
+            if (typeof links !== 'undefined' && Array.isArray(links) && links.length > 0) {
+                links.forEach(item => {
+                    const card = document.createElement('a');
+                    
+                    // Clean directory routing (avoids index.html trail)
+                    card.href = `./${item.folder}/`;
+
+                    // Language check & style assignment
+                    const isBangla = isBanglaText(item.title);
+                    const fontClass = isBangla ? 'font-bangla' : 'font-english';
+
+                    card.className = `group flex items-center justify-between p-5 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-900 hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/5 transition-all duration-300 transform hover:-translate-y-0.5 ${fontClass}`;
+
+                    card.innerHTML = `
+                        <div class="flex items-center gap-4">
+                            <div class="p-3 rounded-lg bg-slate-800/80 group-hover:bg-indigo-600/10 text-slate-400 group-hover:text-indigo-400 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                                </svg>
+                            </div>
+                            <span class="text-slate-200 group-hover:text-white font-medium text-base md:text-lg transition-colors leading-snug">${item.title}</span>
+                        </div>
+                        <div class="text-slate-600 group-hover:text-indigo-400 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </div>
+                    `;
+
+                    container.appendChild(card);
+                });
+            } else {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-10 bg-slate-900/20 rounded-xl border border-dashed border-slate-800 text-slate-500 font-bangla">
+                        কোনো প্রমাণ বা ডিরেক্টরি ডাটা খুঁজে পাওয়া যায়নি।
+                    </div>
+                `;
+            }
+        });
+
+        // Clean Copy Current URL (Ensuring no index.html or trailing index.html remains)
+        function copyCurrentLink() {
+            let currentUrl = window.location.href;
+            
+            // Normalize path to strip file name
+            if (currentUrl.endsWith('/index.html')) {
+                currentUrl = currentUrl.slice(0, -10); // Cuts off 'index.html' (leaves trailing slash)
+            } else if (currentUrl.endsWith('index.html')) {
+                currentUrl = currentUrl.slice(0, -10);
+            }
+
+            const tempInput = document.createElement('input');
+            document.body.appendChild(tempInput);
+            tempInput.value = currentUrl;
+            tempInput.select();
+
+            try {
+                document.execCommand('copy');
+                showToastNotification();
+            } catch (err) {
+                console.error('Could not copy link', err);
+            }
+
+            document.body.removeChild(tempInput);
+        }
+
+        // Toast visual feedback
+        function showToastNotification() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

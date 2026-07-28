@@ -1,0 +1,18 @@
+{
+  "event": {
+    "name": "BDS Intra 2026",
+    "type": "Online"
+  },
+  "equityTeam": [
+    {
+      "name": " Sadia Afrin",
+      "image": "member1.jpg",
+      "contact": "https://m.me/sadia8369547"
+    },
+    {
+      "name": "Istiack Ahamed Khan",
+      "image": "member2.jpg",
+      "contact": "https://m.me/anonymous.istiack"
+    }
+  ]
+}

@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090b12">
+<title>Equity Form | NGDCDS Brand New Day 1.0</title>
+<meta name="description" content="Confidential equity reporting form">
+
+<style>
+@font-face{font-family:B1;src:url('/B1.ttf') format('truetype');font-display:swap}
+@font-face{font-family:E1;src:url('/E1.ttf') format('truetype');font-display:swap}
+@font-face{font-family:E2;src:url('/E2.ttf') format('truetype');font-display:swap}
+
+:root{color-scheme:dark;--bg:#090b12;--muted:#aeb6c8;--pink:#f06b94;--line:#30394e;--text:#f6f7fb}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--text);background:radial-gradient(ellipse at 10% 0%,#321b35 0,transparent 38%),radial-gradient(ellipse at 100% 15%,#162b45 0,transparent 35%),var(--bg);font:15px/1.7 E2,sans-serif}
+:lang(bn),[lang="bn"]{font-family:B1,sans-serif}
+h1,h2,h3,.brand strong,.brand small,.eyebrow,button{font-family:E1,sans-serif}
+input,textarea,.custom-select{font-family:E2,B1,sans-serif}
+
+.shell{width:min(100% - 24px,850px);margin:auto;padding:24px 0 65px}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:25px}
+.logo{width:44px;height:44px;object-fit:contain;border-radius:14px;background:#fff;padding:4px}
+.brand strong{display:block;font-size:13px;letter-spacing:.15em}
+.brand small{font-size:10px;color:var(--muted);letter-spacing:.18em}
+.hero{padding:20px 0;animation:rise .5s both}
+.eyebrow{font-size:10px;color:#ff9fbc;letter-spacing:.2em;text-transform:uppercase;font-weight:800}
+.hero h1{font-size:clamp(39px,8vw,68px);line-height:.98;letter-spacing:-.05em;margin:12px 0}
+.hero h1 span{color:transparent;background:linear-gradient(100deg,#ff718e,#ffd0df,#91d9ff);background-clip:text;-webkit-background-clip:text}
+.hero p,.subtle{color:var(--muted)}
+.glass{position:relative;background:linear-gradient(145deg,#171c2bec,#0f131dec);border:1px solid #ffffff18;border-radius:20px;padding:clamp(17px,4vw,27px);margin:15px 0;box-shadow:0 20px 60px #0003;animation:rise .5s both;z-index:1}
+.glass.has-active-select{z-index:90}
+.glass h2{font-size:15px;margin:0 0 16px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.field{position:relative;display:flex;flex-direction:column;gap:7px;min-width:0;z-index:1}
+.field.has-active-select{z-index:95}
+.full{grid-column:1/-1}
+label{font-size:12px;font-weight:700;color:#e4e8f1}
+input:not([type=checkbox]),textarea{width:100%;padding:12px 13px;border:1px solid #374158;border-radius:12px;background:#0b0f19;color:var(--text);font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus{border-color:#ff80a5;box-shadow:0 0 0 4px #ff80a51c}
+textarea{min-height:105px;resize:vertical}
+input[type=checkbox]{accent-color:#f06b94;width:17px;height:17px;flex:0 0 auto;margin:2px 0 0}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.check{display:flex;align-items:flex-start;gap:9px;border:1px solid #ffffff1c;border-radius:12px;padding:12px;background:#ffffff05;cursor:pointer;font-size:12px;transition:.2s}
+.check:has(input:checked){border-color:#f06b94;background:#f06b9414}
+.check:hover{border-color:#a4adc2}
+.btn{border:0;border-radius:12px;padding:13px 18px;background:linear-gradient(110deg,#df405e,#f071a1);color:#fff;font-size:13px;cursor:pointer;transition:.2s;box-shadow:0 10px 28px #e0445533}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn:disabled{opacity:.55;cursor:wait;transform:none}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.status,.success{padding:14px 16px;border-radius:12px;margin:14px 0;animation:pop .2s}
+.status{border:1px solid #75434d;background:#2a1720;color:#ffd0d9}
+.status.ok,.success{background:#142820;border:1px solid #31644e;color:#bdf5d8}
+.success{display:none}
+.hidden{display:none!important}
+.subtle,.footer{font-size:12px;color:#9ca6ba;line-height:1.7}
+a{color:#ff9fbc}
+.agreement{border-color:#ff6b88!important;box-shadow:0 0 0 4px #e0445515}
+
+/* Custom dropdown */
+.custom-select{position:relative;width:100%;font-size:14px;z-index:2}
+.custom-select.open{z-index:100}
+.select-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:12px 13px;border:1px solid #374158;border-radius:12px;background:linear-gradient(145deg,#111725,#0b0f19);color:#e8ebf4;cursor:pointer;min-height:47px;font-size:14px;transition:border-color .2s,box-shadow .2s,background .2s}
+.select-trigger:hover,.custom-select.open .select-trigger{border-color:#f06b94;box-shadow:0 0 0 4px #f06b9415}
+.select-trigger .selected-label.placeholder{color:#8791a7}
+.select-arrow{width:9px;height:9px;flex:0 0 auto;border-right:2px solid #ff9fbc;border-bottom:2px solid #ff9fbc;transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+.custom-select.open .select-arrow{transform:rotate(225deg) translate(-2px,-1px)}
+.select-menu{position:absolute;top:calc(100% + 7px);left:0;right:0;max-height:230px;overflow-y:auto;padding:6px;border:1px solid #4a526b;border-radius:14px;background:#151a28;box-shadow:0 20px 50px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.05);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);opacity:0;visibility:hidden;transform:translateY(-6px) scale(.99);transform-origin:top;transition:opacity .16s,transform .16s,visibility .16s;z-index:1000}
+.custom-select.open .select-menu{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+.select-option{display:flex;align-items:center;width:100%;text-align:left;padding:10px 11px;border:0;border-radius:9px;background:transparent;color:#e7eaf3;font:13px E2,B1,sans-serif;cursor:pointer;transition:background .15s,color .15s}
+.select-option:hover,.select-option:focus-visible{background:#ffffff15;outline:none}
+.select-option[aria-selected=true]{background:#f06b9426;color:#ffadc5;font-weight:600}
+.select-option[aria-selected=true]::after{content:'✓';margin-left:auto;color:#ff9fbc}
+.select-native{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;pointer-events:none}
+.custom-select.invalid .select-trigger{border-color:#ff607e;box-shadow:0 0 0 3px #ff607e20}
+.custom-select:has(select:disabled){opacity:.5;pointer-events:none}
+
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+@media(max-width:600px){.grid,.checks{grid-template-columns:1fr}.full{grid-column:auto}.shell{width:min(100% - 20px,850px)}.glass{border-radius:16px}.select-menu{max-height:200px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
+</head>
+
+<body>
+<div class="shell">
+
+<header class="brand">
+  <img class="logo" src="../club.png" alt="NGDCDS logo">
+  <div>
+    <strong>NGDCDS</strong>
+    <small>BRAND NEW DAY 1.0</small>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Confidential reporting · 02</div>
+  <h1>Equity <span>Support</span></h1>
+  <p>Share relevant details with the authorised equity team. Your report will be handled as confidentially as possible.</p>
+</section>
+
+<div id="statusMessage" class="status hidden" role="status" aria-live="polite"></div>
+<div id="successMessage" class="success" role="status"></div>
+
+<form id="mainForm" novalidate>
+
+<section class="glass">
+  <h2>01 / Your details</h2>
+
+  <label class="check">
+    <input type="checkbox" id="anonymous" name="anonymous" value="yes">
+    <span>Submit anonymously</span>
+  </label>
+
+  <p class="subtle">
+    Your name, phone number and email are still required for follow-up.
+    With anonymous submission, your name is omitted from the Discord report.
+    Your phone and email may still be visible to authorised webhook recipients.
+  </p>
+
+  <div class="grid" style="margin-top:15px">
+    <div class="field">
+      <label for="reporterName">Full name *</label>
+      <input id="reporterName" name="reporterName" required maxlength="120" autocomplete="name" placeholder="Your full name">
+    </div>
+
+    <div class="field">
+      <label>Your role *</label>
+      <select name="reporterRole" required>
+        <option value="">Choose role</option>
+        <option>Debater</option>
+        <option>Adjudicator</option>
+        <option>Organizer</option>
+        <option>Volunteer</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="reporterEmail">Email *</label>
+      <input id="reporterEmail" name="reporterEmail" type="email" required maxlength="180" autocomplete="email" placeholder="you@example.com">
+    </div>
+
+    <div class="field">
+      <label for="reporterPhone">Phone *</label>
+      <input id="reporterPhone" name="reporterPhone" type="tel" required maxlength="40" autocomplete="tel" placeholder="+880…">
+    </div>
+  </div>
+</section>
+
+<section class="glass">
+  <h2>02 / Person(s) involved</h2>
+  <div class="grid">
+    <div class="field">
+      <label for="accusedName">Person's name</label>
+      <input id="accusedName" name="accusedName" maxlength="120" placeholder="Name, if known">
+    </div>
+
+    <div class="field">
+      <label for="accusedTeam">Team / institution</label>
+      <input id="accusedTeam" name="accusedTeam" maxlength="160" placeholder="Team or institution">
+    </div>
+
+    <div class="field">
+      <label>Role</label>
+      <select name="accusedRole">
+        <option value="">Choose role</option>
+        <option>Debater</option>
+        <option>Adjudicator</option>
+        <option>Organizer</option>
+        <option>Volunteer</option>
+        <option>Other / unknown</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="otherPeople">Other people involved</label>
+      <input id="otherPeople" name="otherPeople" maxlength="300" placeholder="Names, if applicable">
+    </div>
+  </div>
+</section>
+
+<section class="glass">
+  <h2>03 / Incident details</h2>
+  <div class="grid">
+    <div class="field">
+      <label for="incidentDate">Date *</label>
+      <input id="incidentDate" name="incidentDate" type="date" required>
+    </div>
+
+    <div class="field">
+      <label for="incidentTime">Approximate time</label>
+      <input id="incidentTime" name="incidentTime" type="time">
+    </div>
+
+    <div class="field">
+      <label>Where did it happen? *</label>
+      <select name="incidentLocation" required>
+        <option value="">Choose location</option>
+        <option>During a debate round</option>
+        <option>Preparation / motion release</option>
+        <option>Social night / informal event</option>
+        <option>Venue / cafeteria / common area</option>
+        <option>Online platform / social media</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="locationDetail">Specific location / platform</label>
+      <input id="locationDetail" name="locationDetail" maxlength="200" placeholder="Optional">
+    </div>
+
+    <div class="field full">
+      <label for="incidentDescription">What happened? *</label>
+      <textarea id="incidentDescription" name="incidentDescription" required minlength="20" maxlength="8000" placeholder="Describe the incident in your own words. Include relevant context and avoid sharing unrelated private information."></textarea>
+    </div>
+  </div>
+</section>
+
+<section class="glass">
+  <h2>04 / Nature of concern *</h2>
+  <p class="subtle">Select at least one category.</p>
+
+  <div class="checks">
+    <label class="check"><input type="checkbox" name="complaintTypes" value="Verbal or physical harassment"><span>Verbal or physical harassment</span></label>
+    <label class="check"><input type="checkbox" name="complaintTypes" value="Gender discrimination or harassment"><span>Gender discrimination or harassment</span></label>
+    <label class="check"><input type="checkbox" name="complaintTypes" value="Racism or xenophobia"><span>Racism or xenophobia</span></label>
+    <label class="check"><input type="checkbox" name="complaintTypes" value="Personal attacks or bullying"><span>Personal attacks or bullying</span></label>
+    <label class="check"><input type="checkbox" name="complaintTypes" value="Adjudication misconduct or bias"><span>Adjudication misconduct or bias</span></label>
+    <label class="check"><input type="checkbox" name="complaintTypes" value="Threats or intimidation"><span>Threats or intimidation</span></label>
+    <label class="check"><input type="checkbox" name="complaintTypes" value="Privacy or online misconduct"><span>Privacy or online misconduct</span></label>
+    <label class="check"><input type="checkbox" name="complaintTypes" value="Other"><span>Other</span></label>
+  </div>
+
+  <div class="field" style="margin-top:14px">
+    <label for="otherComplaintType">If other, specify</label>
+    <input id="otherComplaintType" name="otherComplaintType" maxlength="300" placeholder="Optional">
+  </div>
+</section>
+
+<section class="glass">
+  <h2>05 / Witnesses and evidence links</h2>
+
+  <div class="grid">
+    <div class="field full">
+      <label for="witnesses">Witnesses</label>
+      <textarea id="witnesses" name="witnesses" maxlength="2500" placeholder="Names or relevant details, if any"></textarea>
+    </div>
+
+    <div class="field full">
+      <label for="evidenceLinks">Evidence links</label>
+      <textarea id="evidenceLinks" name="evidenceLinks" maxlength="5000" placeholder="Paste relevant links, one per line. For example, a post URL, shared document link, or publicly accessible evidence link."></textarea>
+      <p class="subtle">Links only. This form does not upload or store evidence files. Do not share links that expose unrelated private information.</p>
+    </div>
+
+    <div class="field full">
+      <label for="evidenceNotes">Additional evidence context</label>
+      <textarea id="evidenceNotes" name="evidenceNotes" maxlength="2000" placeholder="Optional context about the links or evidence"></textarea>
+    </div>
+  </div>
+</section>
+
+<section class="glass">
+  <h2>06 / Confidentiality and resolution</h2>
+
+  <div class="grid">
+    <div class="field">
+      <label>May the accused be told your identity? *</label>
+      <select name="identityDisclosure" required>
+        <option value="">Choose one</option>
+        <option>Yes</option>
+        <option>No</option>
+        <option>Discuss with equity team first</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Immediate safety concern? *</label>
+      <select name="immediateSafetyConcern" required>
+        <option value="">Choose one</option>
+        <option>No</option>
+        <option>Yes</option>
+        <option>Unsure</option>
+      </select>
+    </div>
+
+    <div class="field full">
+      <label for="desiredResolution">Desired support or outcome *</label>
+      <textarea id="desiredResolution" name="desiredResolution" required maxlength="4000" placeholder="What support or outcome would you like from the equity team?"></textarea>
+    </div>
+  </div>
+</section>
+
+<section class="glass" id="agreementPanel">
+  <h2>07 / Agreement *</h2>
+  <p class="subtle">
+    Please read the
+    <a href="/equity-policy/NGDCDS-BRAND-NEW-DAY-1.0/" target="_blank" rel="noopener">NGDCDS Equity Policy</a>
+    before submitting.
+  </p>
+
+  <label class="check">
+    <input type="checkbox" id="policyAcknowledged" name="policyAcknowledged" value="yes" required>
+    <span>I confirm that this report is accurate to the best of my knowledge and agree to the equity policy.</span>
+  </label>
+</section>
+
+<div class="actions">
+  <button class="btn" type="submit">Send confidential report ↗</button>
+</div>
+
+<p class="footer">
+  This form is not an emergency service. If someone is in immediate danger,
+  contact the on-site organiser or local emergency services.
+</p>
+
+</form>
+</div>
+
+<script>
+const W = 'https://ngdcds-brand-new-day.istiack.workers.dev';
+const $ = s => document.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+function msg(text, good = true) {
+  const el = $('#statusMessage');
+  el.textContent = text;
+  el.classList.remove('hidden', 'ok');
+  if (!good) el.classList.add('ok');
+}
+
+function metadata() {
+  return {
+    userAgent: navigator.userAgent,
+    platform: navigator.platform,
+    language: navigator.language,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    screenWidth: screen.width,
+    screenHeight: screen.height,
+    viewportWidth: innerWidth,
+    viewportHeight: innerHeight,
+    pixelRatio: devicePixelRatio || 1,
+    touchPoints: navigator.maxTouchPoints || 0
+  };
+}
+
+function closeAllDropdowns() {
+  $$('.custom-select.open').forEach(other => {
+    other.classList.remove('open');
+    other.querySelector('.select-trigger')?.setAttribute('aria-expanded', 'false');
+  });
+  $$('.has-active-select').forEach(el => el.classList.remove('has-active-select'));
+}
+
+/* Convert all native selects into themed custom dropdowns.
+   The original select remains as the submitted form value. */
+function enhanceSelect(select) {
+  if (select.dataset.customized) return;
+  select.dataset.customized = 'true';
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'custom-select';
+
+  const trigger = document.createElement('button');
+  trigger.type = 'button';
+  trigger.className = 'select-trigger';
+  trigger.setAttribute('aria-haspopup', 'listbox');
+  trigger.setAttribute('aria-expanded', 'false');
+
+  const label = document.createElement('span');
+  label.className = 'selected-label';
+
+  const arrow = document.createElement('span');
+  arrow.className = 'select-arrow';
+  arrow.setAttribute('aria-hidden', 'true');
+
+  trigger.append(label, arrow);
+
+  const menu = document.createElement('div');
+  menu.className = 'select-menu';
+  menu.setAttribute('role', 'listbox');
+
+  const id = 'custom-select-' + Math.random().toString(36).slice(2, 10);
+  menu.id = id;
+  trigger.setAttribute('aria-controls', id);
+
+  const parent = select.parentNode;
+  parent.insertBefore(wrapper, select);
+  wrapper.append(trigger, menu, select);
+  select.classList.add('select-native');
+
+  function renderOptions() {
+    menu.replaceChildren();
+
+    [...select.options].forEach((option, index) => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'select-option';
+      item.setAttribute('role', 'option');
+      item.setAttribute('aria-selected', String(option.value === select.value));
+      item.textContent = option.textContent;
+      item.disabled = option.disabled;
+
+      item.addEventListener('click', () => {
+        select.selectedIndex = index;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        close();
+        trigger.focus();
+      });
+
+      menu.append(item);
+    });
+
+    updateLabel();
+  }
+
+  function updateLabel() {
+    const option = select.options[select.selectedIndex];
+    label.textContent = option ? option.textContent : 'Choose one';
+    label.classList.toggle('placeholder', !select.value);
+    wrapper.classList.remove('invalid');
+
+    [...menu.children].forEach(item => {
+      item.setAttribute(
+        'aria-selected',
+        String(item.textContent === label.textContent &&
+          item.textContent === select.options[select.selectedIndex]?.textContent)
+      );
+    });
+  }
+
+  function open() {
+    closeAllDropdowns();
+
+    wrapper.classList.add('open');
+    trigger.setAttribute('aria-expanded', 'true');
+
+    const fieldParent = wrapper.closest('.field');
+    const glassParent = wrapper.closest('.glass');
+    if (fieldParent) fieldParent.classList.add('has-active-select');
+    if (glassParent) glassParent.classList.add('has-active-select');
+
+    const current = menu.querySelector('[aria-selected="true"]:not(:disabled)');
+    current?.scrollIntoView({ block: 'nearest' });
+  }
+
+  function close() {
+    wrapper.classList.remove('open');
+    trigger.setAttribute('aria-expanded', 'false');
+
+    const fieldParent = wrapper.closest('.field');
+    const glassParent = wrapper.closest('.glass');
+    if (fieldParent) fieldParent.classList.remove('has-active-select');
+    if (glassParent) glassParent.classList.remove('has-active-select');
+  }
+
+  trigger.addEventListener('click', () => {
+    wrapper.classList.contains('open') ? close() : open();
+  });
+
+  trigger.addEventListener('keydown', event => {
+    if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      open();
+      const first = menu.querySelector('[aria-selected="true"]') ||
+                    menu.querySelector('.select-option:not(:disabled)');
+      first?.focus();
+    }
+  });
+
+  menu.addEventListener('keydown', event => {
+    const items = [...menu.querySelectorAll('.select-option:not(:disabled)')];
+    const index = items.indexOf(document.activeElement);
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      close();
+      trigger.focus();
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      items[Math.min(index + 1, items.length - 1)]?.focus();
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      items[Math.max(index - 1, 0)]?.focus();
+    } else if (event.key === 'Tab') {
+      close();
+    }
+  });
+
+  select.addEventListener('change', () => {
+    updateLabel();
+    renderOptions();
+  });
+
+  renderOptions();
+  select.addEventListener('reset', () => setTimeout(renderOptions, 0));
+}
+
+document.querySelectorAll('select').forEach(enhanceSelect);
+
+document.addEventListener('click', event => {
+  if (!event.target.closest('.custom-select')) {
+    closeAllDropdowns();
+  }
+});
+
+function collect(form) {
+  const data = {};
+
+  for (const [key, value] of new FormData(form)) {
+    if (data[key] !== undefined) {
+      data[key] = Array.isArray(data[key])
+        ? [...data[key], value]
+        : [data[key], value];
+    } else {
+      data[key] = value;
+    }
+  }
+
+  return data;
+}
+
+function validateCustomSelects(form) {
+  let firstInvalid = null;
+
+  $$('select[required]', form).forEach(select => {
+    const wrapper = select.closest('.custom-select');
+    const invalid = !select.value;
+
+    wrapper?.classList.toggle('invalid', invalid);
+
+    if (invalid && !firstInvalid) firstInvalid = wrapper;
+  });
+
+  if (firstInvalid) {
+    msg('Please complete all required dropdowns.');
+    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    firstInvalid.querySelector('.select-trigger')?.focus();
+    return false;
+  }
+
+  return true;
+}
+
+async function getStatus() {
+  const response = await fetch(W + '/status', { cache: 'no-store' });
+  if (!response.ok) throw Error('Status request failed');
+  return response.json();
+}
+
+$('#policyAcknowledged').addEventListener('change', () => {
+  if ($('#policyAcknowledged').checked) {
+    $('#agreementPanel').classList.remove('agreement');
+  }
+});
+
+(async () => {
+  const form = $('#mainForm');
+
+  try {
+    const state = await getStatus();
+
+    if (!state.equityOpen) {
+      msg('Equity form is currently closed.');
+      form.classList.add('hidden');
+      return;
+    }
+
+    msg('Form is open. Complete the required fields.', false);
+  } catch (error) {
+    msg('Cannot connect to form service. Check Worker CORS and deployment.');
+    form.classList.add('hidden');
+    console.error(error);
+    return;
+  }
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+
+    const agreement = $('#policyAcknowledged');
+
+    if (!agreement.checked) {
+      $('#agreementPanel').classList.add('agreement');
+      msg('You must check the agreement before submitting.');
+      $('#agreementPanel').scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+      agreement.focus();
+      return;
+    }
+
+    if (!validateCustomSelects(form)) return;
+    if (!form.reportValidity()) return;
+
+    const complaintTypes = $$('input[name="complaintTypes"]:checked')
+      .map(input => input.value);
+
+    if (!complaintTypes.length) {
+      msg('Choose at least one concern type.');
+      $('.checks').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const button = $('button[type="submit"]');
+    button.disabled = true;
+    button.textContent = 'Sending securely…';
+
+    try {
+      const data = collect(form);
+
+      data.anonymous = $('#anonymous').checked;
+      data.policyAcknowledged = agreement.checked;
+      data.complaintTypes = complaintTypes;
+      data.clientMetadata = metadata();
+
+      /* Links only. No file selection or file upload. */
+      data.evidenceLinks = $('#evidenceLinks').value.trim();
+
+      const response = await fetch(W + '/submit/equity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.ok) {
+        throw Error(result.error || 'Submission failed');
+      }
+
+      form.classList.add('hidden');
+      $('#statusMessage').classList.add('hidden');
+
+      $('#successMessage').style.display = 'block';
+      $('#successMessage').textContent =
+        'Your report has been submitted. Thank you for trusting the equity team.';
+
+      $('#successMessage').scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    } catch (error) {
+      msg(error.message || 'Submission failed. Please try again.');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Send confidential report ↗';
+    }
+  });
+})();
+</script>
+</body>
+</html>

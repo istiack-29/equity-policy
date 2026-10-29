@@ -9,10 +9,10 @@
 
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#09090f;color:#fff;font-family:Arial,sans-serif}
-#pages{height:100%;width:100%;overflow:auto;padding:12px 0 85px}
-.page{position:relative;margin:0 auto 12px;background:#fff;box-shadow:0 2px 12px #0005}
-.page canvas{display:block;width:100%;height:auto}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#09090f;color:#fff;font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif}
+#pages{height:100%;width:100%;overflow-y:auto;overflow-x:hidden;padding:20px 0 90px;display:flex;flex-direction:column;align-items:center}
+.page{position:relative;margin:0 auto 20px;background:#fff;box-shadow:0 8px 30px rgba(0,0,0,0.5);border-radius:4px;overflow:hidden}
+.page canvas{display:block;width:100%;height:100%;image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges}
 #loader{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:17px;padding:24px;background:#09090f;transition:opacity .3s,visibility .3s}
 #loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
 .spinner{width:40px;height:40px;border:3px solid #30303d;border-top-color:#a78bfa;border-radius:50%;animation:spin .8s linear infinite}
@@ -20,7 +20,8 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#09090f;col
 #status{font-size:13px;color:#c2c2d2;text-align:center}
 .track{width:min(280px,85vw);height:5px;border-radius:9px;background:#30303d;overflow:hidden}
 #bar{width:0;height:100%;background:#a78bfa;transition:width .15s}
-#download{position:fixed;right:18px;bottom:18px;z-index:20;display:flex;align-items:center;gap:8px;padding:13px 17px;border-radius:40px;background:#7957e8;color:#fff;text-decoration:none;font-size:14px;font-weight:bold;box-shadow:0 5px 24px #0008}
+#download{position:fixed;right:18px;bottom:18px;z-index:20;display:flex;align-items:center;gap:8px;padding:13px 20px;border-radius:40px;background:#7957e8;color:#fff;text-decoration:none;font-size:14px;font-weight:bold;box-shadow:0 5px 24px rgba(0,0,0,0.5);transition:transform .2s, background-color .2s}
+#download:hover{background:#6843e3;transform:translateY(-2px)}
 #error{display:none;max-width:320px;text-align:center;color:#ff9999;font-size:14px;line-height:1.6}
 </style>
 </head>
@@ -30,7 +31,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#09090f;col
 
 <div id="loader">
   <div class="spinner" id="spinner"></div>
-  <strong>Loading Equity Policy</strong>
+  <strong>Loading High Resolution Equity Policy</strong>
   <div id="status">Preparing PDF... 0%</div>
   <div class="track"><div id="bar"></div></div>
   <div id="error"></div>
@@ -53,6 +54,9 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#09090f;col
   const bar = document.getElementById("bar");
   const error = document.getElementById("error");
   const pages = document.getElementById("pages");
+
+  // Multiplier for super sampling high resolution (Forces minimum 3x device pixel ratio for crystal clear text)
+  const HIGH_RES_FACTOR = Math.max(window.devicePixelRatio || 1, 3.0);
 
   function fail(message){
     document.getElementById("spinner").style.display="none";
@@ -105,30 +109,43 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#09090f;col
     const fragment = document.createDocumentFragment();
 
     for(let n=1;n<=pdf.numPages;n++){
-      status.textContent="Rendering pages... "+n+" / "+pdf.numPages;
+      status.textContent="Rendering high-res pages... "+n+" / "+pdf.numPages;
       const page = await pdf.getPage(n);
-      const base = page.getViewport({scale:1});
-      const width = Math.min(window.innerWidth-16, 900);
-      const viewport = page.getViewport({scale:width/base.width});
-      const ratio = Math.min(window.devicePixelRatio||1,2);
+
+      // Determine CSS display width
+      const baseViewport = page.getViewport({scale: 1.0});
+      const cssWidth = Math.min(window.innerWidth - 32, 1000);
+      const cssScale = cssWidth / baseViewport.width;
+      const cssViewport = page.getViewport({scale: cssScale});
+
+      // Compute actual high-res canvas scale (CSS scale multiplied by forced high DPI factor)
+      const renderViewport = page.getViewport({scale: cssScale * HIGH_RES_FACTOR});
 
       const holder = document.createElement("div");
       holder.className="page";
-      holder.style.width=viewport.width+"px";
+      holder.style.width = cssViewport.width + "px";
+      holder.style.height = cssViewport.height + "px";
 
       const canvas = document.createElement("canvas");
-      canvas.width=Math.floor(viewport.width*ratio);
-      canvas.height=Math.floor(viewport.height*ratio);
-      canvas.style.width=viewport.width+"px";
-      canvas.style.height=viewport.height+"px";
+      canvas.width = Math.floor(renderViewport.width);
+      canvas.height = Math.floor(renderViewport.height);
+      
+      // Keep style dimensions constrained to standard CSS display size
+      canvas.style.width = cssViewport.width + "px";
+      canvas.style.height = cssViewport.height + "px";
+
       holder.appendChild(canvas);
       fragment.appendChild(holder);
 
-      const context = canvas.getContext("2d");
+      const context = canvas.getContext("2d", { alpha: false });
+      
+      // Enable high quality image smoothing algorithms
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = "high";
+
       await page.render({
-        canvasContext:context,
-        viewport:viewport,
-        transform:ratio===1?null:[ratio,0,0,ratio,0,0]
+        canvasContext: context,
+        viewport: renderViewport
       }).promise;
     }
 

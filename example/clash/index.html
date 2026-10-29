@@ -1,0 +1,1011 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090b12">
+<title>Clash Form</title>
+<meta name="description" content="Submit a clash declaration">
+
+<style>
+@font-face {
+  font-family: B1;
+  src: url('/B1.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: E1;
+  src: url('/E1.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: E2;
+  src: url('/E2.ttf') format('truetype');
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+  --bg: #090b12;
+  --panel: #141927;
+  --line: #30394e;
+  --text: #f6f7fb;
+  --muted: #aeb6c8;
+  --pink: #f06b94;
+  --mint: #a5f0cc;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at 10% 0%, #321b35 0, transparent 38%),
+    radial-gradient(ellipse at 100% 15%, #162b45 0, transparent 35%),
+    var(--bg);
+  font: 15px/1.7 E2, sans-serif;
+}
+
+:lang(bn),
+[lang="bn"] {
+  font-family: B1, sans-serif;
+}
+
+h1, h2, h3, .brand strong, .brand small,
+.eyebrow, .person-head, button {
+  font-family: E1, sans-serif;
+}
+
+input, textarea, .custom-select {
+  font-family: E2, B1, sans-serif;
+}
+
+.shell {
+  width: min(100% - 24px, 850px);
+  margin: auto;
+  padding: 24px 0 65px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.logo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 14px;
+  background: #fff;
+  padding: 4px;
+}
+
+.brand strong {
+  display: block;
+  font-size: 13px;
+  letter-spacing: .15em;
+}
+
+.brand small {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .18em;
+}
+
+.hero {
+  padding: 20px 0;
+  animation: rise .5s both;
+}
+
+.eyebrow {
+  font-size: 10px;
+  color: #ff9fbc;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.hero h1 {
+  font-size: clamp(39px, 8vw, 68px);
+  line-height: .98;
+  letter-spacing: -.05em;
+  margin: 12px 0;
+}
+
+.hero h1 span {
+  color: transparent;
+  background: linear-gradient(100deg, #ff718e, #ffd0df, #91d9ff);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.hero p, .subtle {
+  color: var(--muted);
+}
+
+.hero p {
+  max-width: 680px;
+}
+
+.glass {
+  position: relative;
+  background: linear-gradient(145deg, #171c2bec, #0f131dec);
+  border: 1px solid #ffffff18;
+  border-radius: 20px;
+  padding: clamp(17px, 4vw, 27px);
+  margin: 15px 0;
+  box-shadow: 0 20px 60px #0003;
+  animation: rise .5s both;
+  z-index: 1;
+}
+
+.glass.has-active-select { z-index: 90; }
+
+.glass h2 {
+  font-size: 15px;
+  margin: 0 0 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  z-index: 1;
+}
+
+.field.has-active-select { z-index: 95; }
+
+.full { grid-column: 1 / -1; }
+
+label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #e4e8f1;
+}
+
+.req { color: #ff8fae; }
+
+input:not([type="checkbox"]):not([type="file"]),
+textarea {
+  width: 100%;
+  padding: 12px 13px;
+  border: 1px solid #374158;
+  border-radius: 12px;
+  background: #0b0f19;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+input:focus, textarea:focus {
+  border-color: #ff80a5;
+  box-shadow: 0 0 0 4px #ff80a51c;
+}
+
+textarea {
+  min-height: 105px;
+  resize: vertical;
+}
+
+input[type="checkbox"] {
+  accent-color: #f06b94;
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  margin: 2px 0 0;
+}
+
+.checks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  border: 1px solid #ffffff1c;
+  border-radius: 12px;
+  padding: 12px;
+  background: #ffffff05;
+  cursor: pointer;
+  font-size: 12px;
+  transition: .2s;
+}
+
+.check:has(input:checked) {
+  border-color: #f06b94;
+  background: #f06b9414;
+}
+
+.check:hover { border-color: #a4adc2; }
+
+.subtle, .note {
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.person {
+  padding: 14px;
+  border: 1px solid #ffffff1c;
+  border-radius: 14px;
+  margin: 12px 0;
+  animation: pop .2s;
+}
+
+.person-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  color: #ffc0d3;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.mini {
+  border: 1px solid #414a60;
+  border-radius: 9px;
+  background: #202638;
+  color: white;
+  width: 31px;
+  height: 31px;
+  font-size: 19px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 13px 18px;
+  background: linear-gradient(110deg, #df405e, #f071a1);
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: .2s;
+  box-shadow: 0 10px 28px #e0445533;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.btn:disabled {
+  opacity: .55;
+  cursor: wait;
+  transform: none;
+}
+
+.actions {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.status, .success {
+  padding: 14px 16px;
+  border-radius: 12px;
+  margin: 14px 0;
+  animation: pop .2s;
+}
+
+.status {
+  border: 1px solid #75434d;
+  background: #2a1720;
+  color: #ffd0d9;
+}
+
+.status.ok, .success {
+  background: #142820;
+  border: 1px solid #31644e;
+  color: #bdf5d8;
+}
+
+.success { display: none; }
+
+.hidden { display: none !important; }
+
+.footer {
+  font-size: 11px;
+  color: #818ba0;
+  margin-top: 22px;
+}
+
+a { color: #ff9fbc; }
+
+/* Custom dropdown styles */
+.custom-select {
+  position: relative;
+  width: 100%;
+  font-size: 14px;
+  z-index: 2;
+}
+
+.custom-select.open {
+  z-index: 100;
+}
+
+.select-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  padding: 12px 13px;
+  border: 1px solid #374158;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #111725, #0b0f19);
+  color: #e8ebf4;
+  cursor: pointer;
+  min-height: 47px;
+  font-size: 14px;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+
+.select-trigger:hover,
+.custom-select.open .select-trigger {
+  border-color: #f06b94;
+  box-shadow: 0 0 0 4px #f06b9415;
+}
+
+.select-trigger .selected-label.placeholder {
+  color: #8791a7;
+}
+
+.select-arrow {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+  border-right: 2px solid #ff9fbc;
+  border-bottom: 2px solid #ff9fbc;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform .2s;
+}
+
+.custom-select.open .select-arrow {
+  transform: rotate(225deg) translate(-2px, -1px);
+}
+
+.select-menu {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 0;
+  right: 0;
+  max-height: 230px;
+  overflow-y: auto;
+  padding: 6px;
+  border: 1px solid #4a526b;
+  border-radius: 14px;
+  background: #151a28;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px) scale(.99);
+  transform-origin: top;
+  transition: opacity .16s, transform .16s, visibility .16s;
+  z-index: 1000;
+}
+
+.custom-select.open .select-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.select-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 10px 11px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #e7eaf3;
+  font: 13px E2, B1, sans-serif;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+
+.select-option:hover,
+.select-option:focus-visible {
+  background: #ffffff15;
+  outline: none;
+}
+
+.select-option[aria-selected=true] {
+  background: #f06b9426;
+  color: #ffadc5;
+  font-weight: 600;
+}
+
+.select-option[aria-selected=true]::after {
+  content: '✓';
+  margin-left: auto;
+  color: #ff9fbc;
+}
+
+.select-native {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  pointer-events: none;
+}
+
+.custom-select.invalid .select-trigger {
+  border-color: #ff607e;
+  box-shadow: 0 0 0 3px #ff607e20;
+}
+
+.custom-select:has(select:disabled) {
+  opacity: .5;
+  pointer-events: none;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: scale(.985); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 600px) {
+  .grid, .checks { grid-template-columns: 1fr; }
+  .full { grid-column: auto; }
+  .shell { width: min(100% - 20px, 850px); }
+  .glass { border-radius: 16px; }
+  .select-menu { max-height: 200px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+
+<body data-form="clash">
+<div class="shell">
+
+<header class="brand">
+  <img class="logo"
+       src="../club.png"
+       alt="logo">
+  <div>
+    <strong>Clash Form</strong>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Participant support · 01</div>
+  <h1>Clash <span>Declaration</span></h1>
+  <p>Tell the team who the clash involves and why. Add a separate reason for every person.</p>
+</section>
+
+<div id="statusMessage" class="status hidden" role="status" aria-live="polite"></div>
+<div id="successMessage" class="success" role="status"></div>
+
+<form id="mainForm" novalidate>
+
+<section class="glass">
+  <h2>01 / Your details</h2>
+  <div class="grid">
+
+    <div class="field">
+      <label>Your role *</label>
+      <select name="role" required>
+        <option value="">Choose role</option>
+        <option>Adjudicator</option>
+        <option>Debater</option>
+        <option>Organizer</option>
+        <option>Volunteer</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Full name *</label>
+      <input name="name" required maxlength="120"
+             autocomplete="name" placeholder="Your full name">
+    </div>
+
+    <div class="field">
+      <label>Phone number *</label>
+      <input name="phone" type="tel" required maxlength="40"
+             autocomplete="tel" placeholder="+880…">
+    </div>
+
+    <div class="field">
+      <label>Email address *</label>
+      <input name="email" type="email" required maxlength="180"
+             autocomplete="email" placeholder="you@example.com">
+    </div>
+
+  </div>
+</section>
+
+<section class="glass">
+  <h2>02 / Clash category *</h2>
+
+  <div class="checks">
+    <label class="check">
+      <input type="checkbox" name="clashTargets" value="adjudicator">
+      An adjudicator
+    </label>
+
+    <label class="check">
+      <input type="checkbox" name="clashTargets" value="debater">
+      A debater
+    </label>
+  </div>
+
+  <p class="subtle">Select one or both. Maximum 10 people per category.</p>
+</section>
+
+<section id="adjudicatorPanel" class="glass hidden">
+  <h2>03 / Adjudicator clash</h2>
+  <div id="adjudicators"></div>
+</section>
+
+<section id="debaterPanel" class="glass hidden">
+  <h2>04 / Debater clash</h2>
+  <div id="debaters"></div>
+</section>
+
+<div class="actions">
+  <button class="btn" type="submit">Submit declaration ↗</button>
+</div>
+
+<p class="footer">
+  Your details and technical metadata may be shared with authorised organisers.
+</p>
+
+</form>
+</div>
+
+<script>
+const W = 'https://ngdcds-brand-new-day.istiack.workers.dev';
+const $ = s => document.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+function msg(text, good = true) {
+  const el = $('#statusMessage');
+  el.textContent = text;
+  el.classList.remove('hidden', 'ok');
+  if (!good) el.classList.add('ok');
+}
+
+function metadata() {
+  return {
+    userAgent: navigator.userAgent,
+    platform: navigator.platform,
+    language: navigator.language,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    screenWidth: screen.width,
+    screenHeight: screen.height,
+    viewportWidth: innerWidth,
+    viewportHeight: innerHeight,
+    pixelRatio: devicePixelRatio || 1,
+    touchPoints: navigator.maxTouchPoints || 0
+  };
+}
+
+function closeAllDropdowns() {
+  $$('.custom-select.open').forEach(other => {
+    other.classList.remove('open');
+    other.querySelector('.select-trigger')?.setAttribute('aria-expanded', 'false');
+  });
+  $$('.has-active-select').forEach(el => el.classList.remove('has-active-select'));
+}
+
+/* Convert native selects into styled custom dropdowns */
+function enhanceSelect(select) {
+  if (select.dataset.customized) return;
+  select.dataset.customized = 'true';
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'custom-select';
+
+  const trigger = document.createElement('button');
+  trigger.type = 'button';
+  trigger.className = 'select-trigger';
+  trigger.setAttribute('aria-haspopup', 'listbox');
+  trigger.setAttribute('aria-expanded', 'false');
+
+  const label = document.createElement('span');
+  label.className = 'selected-label';
+
+  const arrow = document.createElement('span');
+  arrow.className = 'select-arrow';
+  arrow.setAttribute('aria-hidden', 'true');
+
+  trigger.append(label, arrow);
+
+  const menu = document.createElement('div');
+  menu.className = 'select-menu';
+  menu.setAttribute('role', 'listbox');
+
+  const id = 'custom-select-' + Math.random().toString(36).slice(2, 10);
+  menu.id = id;
+  trigger.setAttribute('aria-controls', id);
+
+  const parent = select.parentNode;
+  parent.insertBefore(wrapper, select);
+  wrapper.append(trigger, menu, select);
+  select.classList.add('select-native');
+
+  function renderOptions() {
+    menu.replaceChildren();
+
+    [...select.options].forEach((option, index) => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'select-option';
+      item.setAttribute('role', 'option');
+      item.setAttribute('aria-selected', String(option.value === select.value));
+      item.textContent = option.textContent;
+      item.disabled = option.disabled;
+
+      item.addEventListener('click', () => {
+        select.selectedIndex = index;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        close();
+        trigger.focus();
+      });
+
+      menu.append(item);
+    });
+
+    updateLabel();
+  }
+
+  function updateLabel() {
+    const option = select.options[select.selectedIndex];
+    label.textContent = option ? option.textContent : 'Choose one';
+    label.classList.toggle('placeholder', !select.value);
+    wrapper.classList.remove('invalid');
+
+    [...menu.children].forEach(item => {
+      item.setAttribute(
+        'aria-selected',
+        String(item.textContent === label.textContent &&
+          item.textContent === select.options[select.selectedIndex]?.textContent)
+      );
+    });
+  }
+
+  function open() {
+    closeAllDropdowns();
+
+    wrapper.classList.add('open');
+    trigger.setAttribute('aria-expanded', 'true');
+
+    const fieldParent = wrapper.closest('.field');
+    const glassParent = wrapper.closest('.glass');
+    if (fieldParent) fieldParent.classList.add('has-active-select');
+    if (glassParent) glassParent.classList.add('has-active-select');
+
+    const current = menu.querySelector('[aria-selected="true"]:not(:disabled)');
+    current?.scrollIntoView({ block: 'nearest' });
+  }
+
+  function close() {
+    wrapper.classList.remove('open');
+    trigger.setAttribute('aria-expanded', 'false');
+
+    const fieldParent = wrapper.closest('.field');
+    const glassParent = wrapper.closest('.glass');
+    if (fieldParent) fieldParent.classList.remove('has-active-select');
+    if (glassParent) glassParent.classList.remove('has-active-select');
+  }
+
+  trigger.addEventListener('click', () => {
+    wrapper.classList.contains('open') ? close() : open();
+  });
+
+  trigger.addEventListener('keydown', event => {
+    if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      open();
+      const first = menu.querySelector('[aria-selected="true"]') ||
+                    menu.querySelector('.select-option:not(:disabled)');
+      first?.focus();
+    }
+  });
+
+  menu.addEventListener('keydown', event => {
+    const items = [...menu.querySelectorAll('.select-option:not(:disabled)')];
+    const index = items.indexOf(document.activeElement);
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      close();
+      trigger.focus();
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      items[Math.min(index + 1, items.length - 1)]?.focus();
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      items[Math.max(index - 1, 0)]?.focus();
+    } else if (event.key === 'Tab') {
+      close();
+    }
+  });
+
+  select.addEventListener('change', () => {
+    updateLabel();
+    renderOptions();
+  });
+
+  renderOptions();
+  select.addEventListener('reset', () => setTimeout(renderOptions, 0));
+}
+
+document.querySelectorAll('select').forEach(enhanceSelect);
+
+document.addEventListener('click', event => {
+  if (!event.target.closest('.custom-select')) {
+    closeAllDropdowns();
+  }
+});
+
+function validateCustomSelects(form) {
+  let firstInvalid = null;
+
+  $$('select[required]', form).forEach(select => {
+    const wrapper = select.closest('.custom-select');
+    const invalid = !select.value;
+
+    wrapper?.classList.toggle('invalid', invalid);
+
+    if (invalid && !firstInvalid) firstInvalid = wrapper;
+  });
+
+  if (firstInvalid) {
+    msg('Please complete all required dropdowns.');
+    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    firstInvalid.querySelector('.select-trigger')?.focus();
+    return false;
+  }
+
+  return true;
+}
+
+async function getState() {
+  const response = await fetch(W + '/status', { cache: 'no-store' });
+  if (!response.ok) throw Error('Status request failed');
+  return response.json();
+}
+
+function add(id, type) {
+  const container = $('#' + id);
+  const person = document.createElement('div');
+  person.className = 'person';
+
+  const identityFields = type === 'debater'
+    ? `
+      <div class="field">
+        <label>Debater name *</label>
+        <input name="debaterName[]" required maxlength="120">
+      </div>
+      <div class="field">
+        <label>Team / institution *</label>
+        <input name="debaterTeam[]" required maxlength="160">
+      </div>`
+    : `
+      <div class="field full">
+        <label>Adjudicator name *</label>
+        <input name="adjudicatorName[]" required maxlength="120">
+      </div>`;
+
+  person.innerHTML = `
+    <div class="person-head">
+      <span></span>
+      <span>
+        <button type="button" class="mini rm" aria-label="Remove person">−</button>
+        <button type="button" class="mini plus" aria-label="Add person">+</button>
+      </span>
+    </div>
+    <div class="grid">
+      ${identityFields}
+      <div class="field full">
+        <label>Reason *</label>
+        <textarea name="${type}Reason[]" required maxlength="2000"
+          placeholder="Explain the specific reason…"></textarea>
+      </div>
+    </div>`;
+
+  container.append(person);
+  refresh(id, type);
+}
+
+function refresh(id, type) {
+  const people = $$('.person', $('#' + id));
+
+  people.forEach((person, index) => {
+    person.querySelector('.person-head span').textContent =
+      (type === 'debater' ? 'Debater ' : 'Adjudicator ') + (index + 1);
+
+    person.querySelector('.rm').style.visibility =
+      index ? 'visible' : 'hidden';
+
+    person.querySelector('.plus').style.visibility =
+      index === people.length - 1 ? 'visible' : 'hidden';
+  });
+}
+
+function initRows(id, type) {
+  add(id, type);
+
+  $('#' + id).addEventListener('click', event => {
+    const person = event.target.closest('.person');
+    if (!person) return;
+
+    if (event.target.closest('.plus')) {
+      if ($$('.person', $('#' + id)).length >= 10) {
+        return msg('Maximum 10 people per category.');
+      }
+      add(id, type);
+    }
+
+    if (event.target.closest('.rm')) {
+      person.remove();
+      refresh(id, type);
+    }
+  });
+}
+
+function collect(form) {
+  const data = {};
+
+  for (const [key, value] of new FormData(form)) {
+    if (key.endsWith('[]')) {
+      (data[key.slice(0, -2)] ??= []).push(value);
+    } else {
+      data[key] = value;
+    }
+  }
+
+  return data;
+}
+
+(async () => {
+  const form = $('#mainForm');
+
+  try {
+    const state = await getState();
+
+    if (!state.clashOpen) {
+      msg('Clash form is currently closed.');
+      form.classList.add('hidden');
+      return;
+    }
+
+    msg('Form is open. Complete the required fields.', false);
+
+    initRows('adjudicators', 'adjudicator');
+    initRows('debaters', 'debater');
+
+    const checks = $$('input[name="clashTargets"]');
+
+    function togglePanels() {
+      const adjudicatorSelected = checks.some(
+        input => input.checked && input.value === 'adjudicator'
+      );
+
+      const debaterSelected = checks.some(
+        input => input.checked && input.value === 'debater'
+      );
+
+      $('#adjudicatorPanel').classList.toggle(
+        'hidden', !adjudicatorSelected
+      );
+
+      $('#debaterPanel').classList.toggle(
+        'hidden', !debaterSelected
+      );
+
+      $$('#adjudicators input, #adjudicators textarea').forEach(input => {
+        input.disabled = !adjudicatorSelected;
+        input.required = adjudicatorSelected;
+      });
+
+      $$('#debaters input, #debaters textarea').forEach(input => {
+        input.disabled = !debaterSelected;
+        input.required = debaterSelected;
+      });
+    }
+
+    checks.forEach(input => input.addEventListener('change', togglePanels));
+    togglePanels();
+
+  } catch (error) {
+    msg('Cannot connect to form service. Check Worker CORS and deployment.');
+    form.classList.add('hidden');
+    console.error(error);
+  }
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+
+    if (!validateCustomSelects(form)) return;
+    if (!form.reportValidity()) return;
+
+    if (!$('input[name="clashTargets"]:checked')) {
+      return msg('Choose at least one clash category.');
+    }
+
+    const button = $('button[type="submit"]');
+    button.disabled = true;
+    button.textContent = 'Submitting…';
+
+    try {
+      const data = collect(form);
+      data.clientMetadata = metadata();
+
+      const response = await fetch(W + '/submit/clash', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.ok) {
+        throw Error(result.error || 'Submission failed');
+      }
+
+      form.classList.add('hidden');
+      $('#statusMessage').classList.add('hidden');
+
+      $('#successMessage').style.display = 'block';
+      $('#successMessage').textContent =
+        'Clash declaration submitted successfully.';
+
+    } catch (error) {
+      msg(error.message || 'Submission failed. Please try again.');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Submit declaration ↗';
+    }
+  });
+})();
+</script>
+</body>
+</html>
